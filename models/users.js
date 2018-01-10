@@ -4,7 +4,7 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
 
-var mongoose = require('mongoose');
+var mongoose =require('mongoose');
 var Schema = mongoose.Schema;
 
 /*
@@ -25,10 +25,9 @@ const userSchema = new Schema({
 
 userSchema.index({ id: 1 });
 
-userSchema.statics.getUserByEmail = function name(params) {
+userSchema.statics.getUserByEmail = async function name(params) {
     try {
-        //    const data = await this.findOne({ email: params.email });
-        const data = this.find({ email: params.email });
+        const data = await this.find({ email: params.email });
         if (!data) {
             return null;
         } else {

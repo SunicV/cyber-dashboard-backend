@@ -1,10 +1,10 @@
 'use strict';
 
-const users = require('../../models/users.js');
+const usersModel = require('../../models/users.js');
 const jwt = require('jwt-simple');
 const cfg = require('./config.js');
 
-exports.apiUser = function(args, res, next) {
+exports.apiUser = function (args, res, next) {
     /**
      * Logs user into the system
      * 
@@ -22,7 +22,7 @@ exports.apiUser = function(args, res, next) {
     }
 }
 
-exports.deleteUser = function(args, res, next) {
+exports.deleteUser = function (args, res, next) {
     /**
      * Delete user
      * This can only be done by the logged in user.
@@ -32,7 +32,7 @@ exports.deleteUser = function(args, res, next) {
     res.end();
 }
 
-exports.loginUser = function(req, res, next) {
+exports.loginUser = async function (req, res, next) {
     /**
      * user login
      * This can only be done by the logged in user.
@@ -45,10 +45,10 @@ exports.loginUser = function(req, res, next) {
         var email = req.body.value.email;
         var password = req.body.value.password;
 
-        var user = users.find(function(u) {
-            return u.email === email && u.password === password;
-        });
-        if (user) {
+
+        var user = await usersModel.getUserByEmail({ email: email });
+
+        if (user.length == 1 && user[0].password === password) {
             var payload = {
                 id: user.id,
                 email: user.email,
@@ -70,7 +70,7 @@ exports.loginUser = function(req, res, next) {
     res.end();
 }
 
-exports.registerUser = function(args, res, next) {
+exports.registerUser = function (args, res, next) {
     /**
      * user register
      * This can only be done by the logged in user.
@@ -81,7 +81,7 @@ exports.registerUser = function(args, res, next) {
     res.end();
 }
 
-exports.requestPassUser = function(args, res, next) {
+exports.requestPassUser = function (args, res, next) {
     /**
      * user request-pass
      * This can only be done by the logged in user.
@@ -92,7 +92,7 @@ exports.requestPassUser = function(args, res, next) {
     res.end();
 }
 
-exports.reset = function(args, res, next) {
+exports.reset = function (args, res, next) {
     /**
      * user reset-pass
      * This can only be done by the logged in user.

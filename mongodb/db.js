@@ -43,9 +43,9 @@ const dblogger = winston.createLogger({
 mongoose.connect(config.url, { useMongoClient: true });
 //mongoose.Promise = global.npm;
 
-const db = mongoose.connection;
 
-db.once('open', () => {
+
+mongoose.connection.once('open', () => {
     dblogger.log({
         level: 'info',
         message: 'connect the mongodb successfully',
@@ -53,7 +53,7 @@ db.once('open', () => {
     });
 });
 
-db.on('error', function(error) {
+mongoose.connection.on('error', function (error) {
     dblogger.log({
         level: 'error',
         message: 'Error in MongoDb connection:',
@@ -62,7 +62,7 @@ db.on('error', function(error) {
     mongoose.disconnect();
 });
 
-db.on('close', function() {
+mongoose.connection.on('close', function () {
     dblogger.log({
         level: 'warn',
         message: 'disconnect the db, reconnect',
@@ -71,4 +71,4 @@ db.on('close', function() {
     mongoose.connect(config.url, { server: { auto_reconnect: true } });
 });
 
-module.exports = db;
+module.exports = mongoose;
